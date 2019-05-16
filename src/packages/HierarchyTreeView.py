@@ -72,10 +72,7 @@ class HierarchyTreeView(QTreeView):
         self.currentIndex()
     
     def removeNode(self):
-        """
-            Povezana na triggered signal akcije za brisanje čvora.
-             
-        """
+
         model = self.model()
 
 
@@ -120,7 +117,7 @@ class HierarchyTreeView(QTreeView):
         msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No )
         msgBox.setDefaultButton(QMessageBox.No)
 
-        msgBox
+
         ret = msgBox.exec_()
 
         if ret == QMessageBox.Yes:
@@ -130,4 +127,4 @@ class HierarchyTreeView(QTreeView):
 
         else:
             return  False
-    # should never be reached
+
