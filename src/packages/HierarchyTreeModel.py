@@ -77,7 +77,7 @@ class HierarchyTreeModel(QAbstractItemModel):
             return node.getName()
         
         if role == Qt.DecorationRole:
-            return QIcon("../media/folder.png")
+            return QIcon("src/media/folder.png")
     
     def headerData(self, section, orientation, role):
         """
