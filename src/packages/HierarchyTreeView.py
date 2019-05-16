@@ -1,5 +1,5 @@
 from PySide2.QtCore import QModelIndex, Qt
-from PySide2.QtWidgets import QTreeView, QMenu, QAction, QAbstractItemView, QInputDialog
+from PySide2.QtWidgets import QTreeView, QMenu, QAction, QAbstractItemView, QInputDialog, QMessageBox
 
 from src.model.Node import Node
 
@@ -42,7 +42,7 @@ class HierarchyTreeView(QTreeView):
         actionRename.triggered.connect(self.showDialog)
         
         actionRemProj = QAction("Delete", None)
-        actionRemProj.triggered.connect(self.removeNode)
+        actionRemProj.triggered.connect(self.removeConfirmDialog)
         
         newMenu.addAction(actionNewProj)
         self.contextMenu.addAction(actionRename)
@@ -58,6 +58,7 @@ class HierarchyTreeView(QTreeView):
             TODO: implementirati dijalog za unos naziva, mogućnost dodavanje tipiziranih čvorova i rukovanje situacijom postojanja elementa sa istim nazivom.
         """ 
         model = self.model()
+
         
         node = Node("NoviCvor")
         
@@ -74,9 +75,10 @@ class HierarchyTreeView(QTreeView):
         """
             Povezana na triggered signal akcije za brisanje čvora.
              
-            TODO: implementirati dijalog za potvrdu akcije brisanja.
         """
         model = self.model()
+
+
         model.removeRow(self.currentIndex().internalPointer().getIndex(), self.currentIndex().parent())    
         
 
@@ -110,3 +112,22 @@ class HierarchyTreeView(QTreeView):
                 self.currentIndex().internalPointer().setName(text)
         else:
             return False
+
+    def removeConfirmDialog(self):
+        msgBox = QMessageBox()
+        msgBox.setText("The package will be deleted.")
+        msgBox.setInformativeText("Do you want to delete package?")
+        msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No )
+        msgBox.setDefaultButton(QMessageBox.No)
+
+        msgBox
+        ret = msgBox.exec_()
+
+        if ret == QMessageBox.Yes:
+            self.removeNode()
+        elif ret == QMessageBox.No:
+            return False
+
+        else:
+            return  False
+    # should never be reached
