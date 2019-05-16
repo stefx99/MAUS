@@ -20,9 +20,10 @@ class MainWindow(QtWidgets.QWidget):
 
 
         # Setting up and add to layout
-        self.layout = QtWidgets.QGridLayout()
-        self.layout.addWidget(self.tree, 0, 0)
-        self.layout.addWidget(self.pageView, 0, 1)
+        self.layout = QtWidgets.QHBoxLayout()
+
+        self.layout.addWidget(self.tree)
+        self.layout.addWidget(self.pageView)
 
         # Menu Bar
         self.menuBar = QtWidgets.QMenuBar()

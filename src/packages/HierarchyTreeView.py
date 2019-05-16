@@ -1,7 +1,8 @@
 from PySide2.QtCore import QModelIndex, Qt
-from PySide2.QtWidgets import QTreeView, QMenu, QAction, QAbstractItemView
+from PySide2.QtWidgets import QTreeView, QMenu, QAction, QAbstractItemView, QInputDialog
 
 from src.model.Node import Node
+
 
 
 class HierarchyTreeView(QTreeView):
@@ -38,7 +39,7 @@ class HierarchyTreeView(QTreeView):
         actionNewProj.triggered.connect(self.addNode)
         
         actionRename = QAction("Rename", None)
-        actionRename.triggered.connect(self.renameNode)
+        actionRename.triggered.connect(self.showDialog)
         
         actionRemProj = QAction("Delete", None)
         actionRemProj.triggered.connect(self.removeNode)
@@ -65,6 +66,9 @@ class HierarchyTreeView(QTreeView):
         else:
             model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
         self.expand(self.currentIndex())
+
+    def renameNodeDialog(self):
+        self.currentIndex()
     
     def removeNode(self):
         """
@@ -75,13 +79,8 @@ class HierarchyTreeView(QTreeView):
         model = self.model()
         model.removeRow(self.currentIndex().internalPointer().getIndex(), self.currentIndex().parent())    
         
-    def renameNode(self):
-        """
-            Povezana na triggered signal akcije za promenu naziva čvora.
-             
-            TODO: implementirati dijalog za unos naziva i rukovanje situacijom postojanja elementa sa istim nazivom.
-        """
-        self.currentIndex().internalPointer().setName("NOVO")
+
+
 
     def mousePressEvent(self, event):
         """
@@ -92,3 +91,22 @@ class HierarchyTreeView(QTreeView):
             self.clearSelection()
             self.setCurrentIndex(QModelIndex())
         super(HierarchyTreeView, self).mousePressEvent(event)
+
+
+
+    def showDialog(self):
+
+        dialog = QInputDialog()
+        dialog.setWindowTitle("Rename node")
+        dialog.setLabelText("Type new package name:")
+        dialog.open()
+
+        text ,ok = dialog.getText(self, "Rename node", "Type new package name:")
+
+        if ok:
+            if text == "":
+                return False
+            else:
+                self.currentIndex().internalPointer().setName(text)
+        else:
+            return False
