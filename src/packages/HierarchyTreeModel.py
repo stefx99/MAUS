@@ -2,6 +2,7 @@ from PySide2.QtCore import QAbstractItemModel, QModelIndex, Qt
 from PySide2.QtGui import QIcon
 
 
+
 class HierarchyTreeModel(QAbstractItemModel):
     '''
     Model hijerarhijskog stabla
@@ -76,7 +77,7 @@ class HierarchyTreeModel(QAbstractItemModel):
             return node.getName()
         
         if role == Qt.DecorationRole:
-            return QIcon("../folder.png")
+            return QIcon("../media/folder.png")
     
     def headerData(self, section, orientation, role):
         """
