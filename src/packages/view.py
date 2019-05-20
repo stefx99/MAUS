@@ -42,17 +42,20 @@ class MainWindow(QtWidgets.QWidget):
 
 
     def createMenus(self):
-        actionNewProject = QtWidgets.QAction("New", None)
-        actionNewProject.triggered.connect(None)
+
+        self.actionNewProject = QtWidgets.QAction("New", None)
+        self.actionNewProject.triggered.connect(self.tree.addNode)
+
+        
 
         self.filemenu = self.mainMenu.addMenu("File")
         self.helpmenu = self.mainMenu.addMenu("Help")
-        self.helpmenu.addAction("User Manual")
+        self.helpmenu.addAction(self.actionNewProject)
 
-        self.filemenu.addAction(actionNewProject)
-        self.filemenu.addAction("Open")
-        self.filemenu.addAction("Save")
-        self.filemenu.addAction("Exit")
+        self.filemenu.addAction(self.actionNewProject)
+
+        self.filemenu.addAction(self.actionNewProject)
+        self.filemenu.addAction(self.actionNewProject)
 
 
 
