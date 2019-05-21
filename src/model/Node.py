@@ -143,3 +143,10 @@ class Node(QObject):
         """
         if self.parent is not None:
             return self.parent.children.index(self)
+
+    def getChild(self):
+        """
+            Vraca Listu childova
+        :return:
+        """
+        return self.children
