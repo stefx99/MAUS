@@ -1,5 +1,6 @@
 from PySide2 import QtWidgets, QtCore, QtGui
 import random
+import sys
 
 from src.model.Node import Node
 from src.packages.HierarchyTreeModel import HierarchyTreeModel
@@ -66,16 +67,22 @@ class MainWindow(QtWidgets.QWidget):
         self.actionNewProject = QtWidgets.QAction("New", None)
         self.actionNewProject.triggered.connect(self.tree.addNode)
 
+        self.actionExit = QtWidgets.QAction("Exit", None)
+        self.actionExit.triggered.connect(self.close_application)
+
 
 
         self.filemenu = self.mainMenu.addMenu("File")
         self.helpmenu = self.mainMenu.addMenu("Help")
         self.helpmenu.addAction(self.actionNewProject)
 
-        self.filemenu.addAction(self.actionNewProject)
+        self.filemenu.addAction(self.actionExit)
 
         self.filemenu.addAction(self.actionNewProject)
         self.filemenu.addAction(self.actionNewProject)
+
+    def close_application(self):
+        sys.exit()
 
     def initUI(self):
             # boldAction =
