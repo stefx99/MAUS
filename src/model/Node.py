@@ -28,7 +28,18 @@ class Node(QObject):
         self.name = name
         self.parent = None
         self.children = []
-    
+
+        if self.getParent():
+            self.depth = self.getParent().getDepth()
+            self.depth += 1
+
+        else:
+            self.depth = 0
+
+
+    def getDepth(self):
+        return self.depth
+
     def setParent(self, parent):
         """
         Postavlja roditeljski čvor

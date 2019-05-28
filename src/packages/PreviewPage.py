@@ -36,8 +36,9 @@ class PreviewPage(QtWidgets.QWidget):
         p = new.palette()
         p.setColor(new.backgroundRole(), self.randomColor())
         new.setPalette(p)
-        new.setFixedHeight(300)
-        new.setFixedWidth(1000)
+        new.setMinimumHeight(600)
+        new.setMinimumWidth(800)
+
         return new
 
     def randomColor(self):

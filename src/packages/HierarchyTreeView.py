@@ -70,9 +70,12 @@ class HierarchyTreeView(QTreeView):
 
         node = Node(text)
         if not self.currentIndex().isValid():
-            model.insertRow(model.rowCount(self.currentIndex()), node)
+                model.insertRow(model.rowCount(self.currentIndex()), node)
         else:
+
+
             model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
+
         self.expand(self.currentIndex())
 
 
