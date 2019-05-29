@@ -47,6 +47,7 @@ class MainWindow(QtWidgets.QWidget):
         self.preview = QtWidgets.QScrollArea()
         self.preview.setWidget(self.block)
 
+
         # End preview
 
 
@@ -59,7 +60,9 @@ class MainWindow(QtWidgets.QWidget):
         self.createMenus()
         self.setLayout(self.layout)
         self.setWindowTitle(self.tr("MAUS"))
+
         self.layout.setMenuBar(self.mainMenu)
+
 
 
     def createMenus(self):
@@ -70,19 +73,62 @@ class MainWindow(QtWidgets.QWidget):
         self.actionExit = QtWidgets.QAction("Exit", None)
         self.actionExit.triggered.connect(self.close_application)
 
+        self.actionOpen = QtWidgets.QAction("Open", None) # Dodavanje dugmica
+        self.actionOpen.triggered.connect(self.file_open)
+
 
 
         self.filemenu = self.mainMenu.addMenu("File")
-        self.helpmenu = self.mainMenu.addMenu("Help")
-        self.helpmenu.addAction(self.actionNewProject)
 
-        self.filemenu.addAction(self.actionExit)
+
+        self.helpmenu = self.mainMenu.addMenu("Help")
+        #self.helpmenu.clicked.connect(showHelp)
+
+        self.filemenu.addAction(self.actionExit)   # Dodavanje akcija na menubar
+        self.filemenu.addAction(self.actionOpen)
 
         self.filemenu.addAction(self.actionNewProject)
         self.filemenu.addAction(self.actionNewProject)
 
     def close_application(self):
         sys.exit()
+
+    def editor(self):
+
+        self.textEdit = QtGui.QTextEdit()
+        self.setCentralWidget(self.textEdit)
+
+    def file_open(self): ### FILEOPEN KAO RADI, TREBAJU FUNKCIONALNOSTI
+
+        fileOpen = QtWidgets.QFileDialog()
+
+        fileOpen.setFileMode(QtWidgets.QFileDialog.ExistingFiles)
+
+        if fileOpen.exec_():
+            inFiles = fileOpen.selectedFiles()
+        else:
+            inFiles = []
+
+        fileOpen.setParent(None)
+
+        return inFiles
+
+    """
+        name = QtGui.QFileOpenEvent.openFile(self, 'Open File')
+        file = open(name, 'r')
+
+        self.editor()
+
+        with file:
+            text = file.read()
+            self.textEdit.setText(text)
+    """
+    def file_save(self):
+        name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
+        file = open(name, 'w')
+        text = self.textEdit.toPlainText()
+        file.write(text)
+        file.close()
 
     def initUI(self):
             # boldAction =
