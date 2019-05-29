@@ -76,19 +76,23 @@ class MainWindow(QtWidgets.QWidget):
         self.actionOpen = QtWidgets.QAction("Open", None) # Dodavanje dugmica
         self.actionOpen.triggered.connect(self.file_open)
 
+        self.actionHelp = QtWidgets.QAction("Help", None)
+        self.actionHelp.triggered.connect(self.helpWindow)
 
+        self.actionAbout = QtWidgets.QAction("About", None)
+        self.actionAbout.triggered.connect(self.aboutWindow)
 
         self.filemenu = self.mainMenu.addMenu("File")
 
 
         self.helpmenu = self.mainMenu.addMenu("Help")
-        #self.helpmenu.clicked.connect(showHelp)
+
 
         self.filemenu.addAction(self.actionExit)   # Dodavanje akcija na menubar
         self.filemenu.addAction(self.actionOpen)
 
-        self.filemenu.addAction(self.actionNewProject)
-        self.filemenu.addAction(self.actionNewProject)
+        self.helpmenu.addAction(self.actionHelp)
+        self.helpmenu.addAction(self.actionAbout)
 
     def close_application(self):
         sys.exit()
@@ -97,6 +101,24 @@ class MainWindow(QtWidgets.QWidget):
 
         self.textEdit = QtGui.QTextEdit()
         self.setCentralWidget(self.textEdit)
+
+
+    def helpWindow(self):
+
+        msgBox = QtWidgets.QMessageBox(self)
+        msgBox.setWindowTitle(msgBox.tr("Help"))
+        msgBox.setText('Cool message')
+        msgBox.show();
+
+
+    def aboutWindow(self):
+
+        msgBox = QtWidgets.QMessageBox(self)
+        msgBox.setWindowTitle(msgBox.tr("About"))
+        msgBox.setText('Cool message #2')
+        msgBox.show();
+
+
 
     def file_open(self): ### FILEOPEN KAO RADI, TREBAJU FUNKCIONALNOSTI
 
