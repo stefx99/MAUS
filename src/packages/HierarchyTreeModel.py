@@ -163,14 +163,24 @@ class HierarchyTreeModel(QAbstractItemModel):
             parentNode = parent.internalPointer()
         else:
             parentNode = self.root
-        
-        self.beginInsertRows(parent, position, position)
-        
-        success = parentNode.insertChild(position, row)
-        
-        self.endInsertRows()
-        
-        return success
+
+
+
+
+        if parentNode.validDepth():
+
+            self.beginInsertRows(parent, position, position)
+
+            success = parentNode.insertChild(position, row)
+
+            self.endInsertRows()
+
+            if self.checkName(row.getName(), parentNode):
+                self.removeRow(position, parent)
+
+            return success
+
+        return False
     
     def removeRow(self, position, parent = QModelIndex()):
         """
@@ -196,14 +206,17 @@ class HierarchyTreeModel(QAbstractItemModel):
         
         return success
 
-    def checkName(self, name):
-        for child in self.root.getChild():
-            if child.childCount() > 0:
-                if child == name:
-                    return True
 
-                else:
-                    self.checkName(name)
-            else:
-                continue
-        return False
+    def checkName(self, name, parent):
+        c = 0
+        for child in parent.getChild():
+            if child.getName() == name:
+                c += 1
+
+
+        if c > 1:
+            return True
+        else:
+            return False
+
+

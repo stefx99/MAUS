@@ -28,13 +28,8 @@ class Node(QObject):
         self.name = name
         self.parent = None
         self.children = []
+        self.depth = 0
 
-        if self.getParent():
-            self.depth = self.getParent().getDepth()
-            self.depth += 1
-
-        else:
-            self.depth = 0
 
 
     def getDepth(self):
@@ -83,8 +78,12 @@ class Node(QObject):
         Args:
             child(Node): čvor koji se dodaje
         """
+        if self.depth > 2:
+            return False
+
         self.children.append(child)
         child.setParent(self)
+
         
     def insertChild(self, position, child):
         """
@@ -102,6 +101,7 @@ class Node(QObject):
         
         self.children.insert(position, child)
         child.setParent(self)
+        child.depth = child.getParent().getDepth() + 1
         return True
     
     def removeChild(self, position):
@@ -161,3 +161,16 @@ class Node(QObject):
         :return:
         """
         return self.children
+
+    def validDepth(self):
+        if self.depth < 2:
+            return True
+        else:
+            return False
+
+
+class slotNode(Node):
+
+
+    def __init__(self):
+        super.__init__()

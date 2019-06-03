@@ -7,6 +7,7 @@ from src.packages.HierarchyTreeModel import HierarchyTreeModel
 from src.packages.HierarchyTreeView import HierarchyTreeView
 from src.packages.TextEdit import Window
 from src.packages.PreviewPage import PreviewPage
+from src.packages.pageView import pageView
 
 
 class MainWindow(QtWidgets.QWidget):
@@ -21,7 +22,6 @@ class MainWindow(QtWidgets.QWidget):
         self.tree.setModel(self.treeModel)
         self.tree.setMaximumWidth(180)
 
-        #self.pageView = QtWidgets.QAbstractScrollArea()
 
 
         # Setting up and add to layout
@@ -37,15 +37,9 @@ class MainWindow(QtWidgets.QWidget):
 
         # PREVIEWPAGEEE
 
-        self.block = QtWidgets.QWidget()
-        self.block.setAutoFillBackground(True)
-        p = self.block.palette()
-        p.setColor(self.block.backgroundRole(), randomColor())
-        self.block.setPalette(p)
-        self.block.setFixedHeight(800)
-        self.block.setFixedWidth(1000)
-        self.preview = QtWidgets.QScrollArea()
-        self.preview.setWidget(self.block)
+
+        self.preview = pageView()
+
 
 
         # End preview
