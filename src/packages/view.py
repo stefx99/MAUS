@@ -7,7 +7,7 @@ from src.packages.HierarchyTreeModel import HierarchyTreeModel
 from src.packages.HierarchyTreeView import HierarchyTreeView
 from src.packages.TextEdit import Window
 from src.packages.PreviewPage import PreviewPage
-from src.packages.pageView import pageView
+from src.packages.bookView import bookView
 
 
 class MainWindow(QtWidgets.QWidget):
@@ -29,7 +29,7 @@ class MainWindow(QtWidgets.QWidget):
         self.layout.addWidget(self.tree)
         #self.layout.addWidget(self.pageView)
 
-        # Menu Bar//////
+        # Menu Bar //////
 
         self.mainMenu = QtWidgets.QMenuBar()
 
@@ -38,19 +38,18 @@ class MainWindow(QtWidgets.QWidget):
         # PREVIEWPAGEEE
 
 
-        self.preview = pageView()
+        self.preview = bookView()
 
 
 
         # End preview
 
 
-        self.toolBar = QtWidgets.QToolBar()
+
         self.initUI()
 
         # Layout add
         self.layout.addWidget(self.preview)
-        self.layout.addWidget(self.toolBar)
         self.createMenus()
         self.setLayout(self.layout)
         self.setWindowTitle(self.tr("MAUS"))
@@ -62,7 +61,7 @@ class MainWindow(QtWidgets.QWidget):
     def createMenus(self):
 
         self.actionNewProject = QtWidgets.QAction("New", None)
-        self.actionNewProject.triggered.connect(self.tree.addNode)
+        #self.actionNewProject.triggered.connect(self.tree.addNode)
 
         self.actionExit = QtWidgets.QAction("Exit", None)
         self.actionExit.triggered.connect(self.close_application)
@@ -249,9 +248,7 @@ class MainWindow(QtWidgets.QWidget):
 
 
 
-        self.toolBar.addAction(boldLetter)
-        self.toolBar.addAction(italicLetter)
-        self.toolBar.addAction(underlineLetter)
+
 
 
         #self.toolBar.setGeometry(300, 300, 300, 300)

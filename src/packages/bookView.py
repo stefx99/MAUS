@@ -2,10 +2,10 @@ from PySide2.QtWidgets import QScrollArea, QTabWidget, QBoxLayout, QHBoxLayout, 
 
 
 
-class pageView(QScrollArea):
+class bookView(QScrollArea):
 
     def __init__(self, page = None):
-        super(pageView, self).__init__()
+        super(bookView, self).__init__()
         self._children = []
         self.panel = QWidget()
         self.pageLayout = QVBoxLayout()
@@ -17,7 +17,7 @@ class pageView(QScrollArea):
         #self.page = page
 
 
-        #
+
         # self.page.childInsertedSignal.connect(self.add_slot)
         # self.page.childRemovedSignal.connect(self.remove_slot)
         # self.page.nameChangedSignal.connect(self.nameChanged)
