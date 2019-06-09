@@ -14,6 +14,9 @@ class bookView(QScrollArea):
         self.setWidgetResizable(True)
         self.setWidget(self.panel)
 
+
+
+
         #self.page = page
 
 

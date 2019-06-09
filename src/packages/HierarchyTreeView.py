@@ -81,8 +81,7 @@ class HierarchyTreeView(QTreeView):
 
             model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
 
-        ld = layoutDialog()
-        ld.open()
+        
 
         self.expand(self.currentIndex())
 
