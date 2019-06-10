@@ -1,7 +1,10 @@
 from PySide2.QtCore import QModelIndex, Qt
-from PySide2.QtWidgets import QTreeView, QMenu, QAction, QAbstractItemView, QInputDialog, QMessageBox
+from PySide2.QtWidgets import QTreeView, QMenu, QAction, QWidget, QAbstractItemView, QInputDialog, QMessageBox, QApplication
 import os
 from src.model.Node import Node
+from src.model.Page import Page
+from src.packages.layoutDialog import layoutDialog
+
 
 
 
@@ -35,8 +38,9 @@ class HierarchyTreeView(QTreeView):
         newMenu = QMenu("New") 
         self.contextMenu.addMenu(newMenu)
         
-        actionNewProj = QAction("NewProject", None)
-        actionNewProj.triggered.connect(self.addNode)
+        actionNewProj = QAction("New Page", None)
+        actionNewProj.triggered.connect(self.addPage)
+
         
         actionRename = QAction("Rename", None)
         actionRename.triggered.connect(self.showDialog)
@@ -54,31 +58,35 @@ class HierarchyTreeView(QTreeView):
 
 
     """
-        Dodavanje novog Node-a 
+        Dodavanje novog Pagea-a 
         
-        //TODO: Dodati proveru za unikatne nazive 
     """
-    def addNode(self):
+
+    def addPage(self):
         model = self.model()
 
         dialog = QInputDialog()
-        dialog.setWindowTitle("New package")
-        dialog.setLabelText("Type new package name:")
+        dialog.setWindowTitle("New page")
+        dialog.setLabelText("Type new page name:")
         dialog.open()
 
-        text, ok = dialog.getText(self, "New package", "Type new package name:")
+        text, ok = dialog.getText(self, "New page", "Type new page name:")
 
-        node = Node(text)
 
+        node = Page(text)
         if not self.currentIndex().isValid():
-                model.insertRow(model.rowCount(self.currentIndex()), node)
+            model.insertRow(model.rowCount(self.currentIndex()), node)
+
         else:
+
             model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
+
+        
 
         self.expand(self.currentIndex())
 
 
-        ########
+
 
 
     def renameNodeDialog(self):
@@ -115,6 +123,7 @@ class HierarchyTreeView(QTreeView):
 
         text ,ok = dialog.getText(self, "Rename node", "Type new package name:")
 
+
         if ok:
             if text == "":
                 return False
@@ -140,4 +149,8 @@ class HierarchyTreeView(QTreeView):
 
         else:
             return  False
+
+
+
+
 
