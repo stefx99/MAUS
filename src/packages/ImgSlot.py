@@ -22,7 +22,6 @@ class Main(QMainWindow):
     def initUI(self):
 
         ############################################################################################
-        #toolBar radnje
 
         newAction = QAction(QIcon("src/media/new.png"), "New", self)
         newAction.setShortcut("Ctrl+N")
@@ -78,8 +77,6 @@ class Main(QMainWindow):
 
         self.fontFamily = QFontComboBox(self)
         self.fontFamily.currentFontChanged.connect(self.FontFamily)
-
-        ############################################################################################
 
         fontSize = QComboBox(self)
         fontSize.setEditable(True)
@@ -172,33 +169,19 @@ class Main(QMainWindow):
         self.setWindowIcon(QIcon("icons/maus.jpg"))
         self.show()
 
-        ############################################################################################
-
         menubar = self.menuBar()
         file = menubar.addMenu("File")
-        edit = menubar.addMenu("Edit")
-        view = menubar.addMenu("View")
-
+        # edit = menubar.addMenu("Edit")
+        # view = menubar.addMenu("View")
+        #
         file.addAction(newAction)
         file.addAction(openAction)
         file.addAction(saveAction)
+        #
+        # edit.addAction(undoAction)
+        # edit.addAction(cutAction)
+        # edit.addAction(copyAction)
 
-        edit.addAction(undoAction)
-        edit.addAction(cutAction)
-        edit.addAction(copyAction)
-
-        hideTBAction = QAction("Hide Toolbar", self, checkable=True)
-        hideTBAction.triggered.connect(self.hideToolBar)
-
-        hideFBAction = QAction("Hide Formatbar", self, checkable=True)
-        hideFBAction.triggered.connect(self.hideFormatBar)
-
-        hideSBAction = QAction("Hide Statusbar", self, checkable=True)
-        hideSBAction.triggered.connect(self.hideStatusBar)
-
-        view.addAction(hideTBAction)
-        view.addAction(hideFBAction)
-        view.addAction(hideSBAction)
 
     def hideToolBar(self):
         global hideTB
@@ -323,14 +306,3 @@ class Main(QMainWindow):
 
     def NumberedList(self):
         self.text.insertHtml("<ol><li> ...</li></ol>")
-
-def main():
-    app = QApplication(sys.argv)
-    main = Main()
-    main.show()
-
-    sys.exit(app.exec_())
-
-
-if __name__ == "__main__":
-    main()
