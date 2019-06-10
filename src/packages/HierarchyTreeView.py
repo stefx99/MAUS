@@ -5,7 +5,7 @@ import os
 from src.model.Chapter import Chapter
 from src.model.Node import Node
 from src.model.Page import Page
-from src.packages.layoutDialog import layoutDialog
+from src.model.Slot import Slot
 
 class HierarchyTreeView(QTreeView):
     """
@@ -93,13 +93,14 @@ class HierarchyTreeView(QTreeView):
     def addPage(self):
         model = self.model()
 
-        dialog = QInputDialog()
-        dialog.setWindowTitle("New page")
-        dialog.setLabelText("Type new page name:")
-        dialog.open()
 
-        text, ok = dialog.getText(self, "New page", "Type new page name:")
-        if ok:
+
+        text, ok = QInputDialog.getText(self, "New page", "Type new page name:")
+
+        layoutGrid, okk = QInputDialog.getItem(self, "Setting up page layout", "Choose layout",["2x2","2x3", "2x4", "3x2", "4x2"], 0, False)
+
+
+        if ok and okk:
             if text == "":
                 msgBox = QtWidgets.QMessageBox(self)
                 msgBox.setWindowTitle(msgBox.tr("Error"))
@@ -108,6 +109,14 @@ class HierarchyTreeView(QTreeView):
                 return False
             else:
                 node = Page(text)
+
+
+                lay = layoutGrid.split('x')
+
+                self.addSlots(node, int(lay[0]), int(lay[1]))
+
+
+
                 if not self.currentIndex().isValid():
                     model.insertRow(model.rowCount(self.currentIndex()), node)
                 else:
@@ -173,3 +182,9 @@ class HierarchyTreeView(QTreeView):
 
         else:
             return  False
+
+    def addSlots(self,parent, width, height):
+
+        for i in range(width*height):
+            node = Slot("Slot"+ str(i))
+            parent.addChild(node)

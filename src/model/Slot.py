@@ -18,7 +18,7 @@ class Slot(Node):
         self.viewClass = QWidget
 
     def getIcon(self):
-        return QIcon('../media.s.png')
+        return QIcon('src/media/plus.png')
 
     def addChild(self, child):
         raise InvalidNodeTypeException('Cannot insert nodes of this type')
