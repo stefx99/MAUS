@@ -82,7 +82,14 @@ class HierarchyTreeView(QTreeView):
             else:
                 node = Chapter(text)
                 if not self.currentIndex().isValid():
-                    model.insertRow(model.rowCount(self.currentIndex()), node)
+                    if False:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
+                    else:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
                 else:
                     model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
         else:
@@ -118,7 +125,14 @@ class HierarchyTreeView(QTreeView):
 
 
                 if not self.currentIndex().isValid():
-                    model.insertRow(model.rowCount(self.currentIndex()), node)
+                    if False:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
+                    else:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
                 else:
                     model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
         else:
@@ -160,6 +174,10 @@ class HierarchyTreeView(QTreeView):
 
         if ok:
             if text == "":
+                msgBox = QtWidgets.QMessageBox(self)
+                msgBox.setWindowTitle(msgBox.tr("Error"))
+                msgBox.setText('File must have a name.')
+                msgBox.show();
                 return False
             else:
                 self.currentIndex().internalPointer().setName(text)

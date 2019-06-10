@@ -14,7 +14,6 @@ class MainWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
-        # Treeview
         self.rootNode = Node('ROOT')
         self.treeModel = HierarchyTreeModel(self.rootNode)
 
@@ -22,33 +21,14 @@ class MainWindow(QtWidgets.QWidget):
         self.tree.setModel(self.treeModel)
         self.tree.setMaximumWidth(180)
 
-
-
-        # Setting up and add to layout
         self.layout = QtWidgets.QHBoxLayout()
         self.layout.addWidget(self.tree)
         #self.layout.addWidget(self.pageView)
 
-        # Menu Bar //////
-
         self.mainMenu = QtWidgets.QMenuBar()
-
-        # End of menu bar
-
-        # PREVIEWPAGEEE
-
 
         self.preview = bookView()
 
-
-
-        # End preview
-
-
-
-        self.initUI()
-
-        # Layout add
         self.layout.addWidget(self.preview)
         self.createMenus()
         self.setLayout(self.layout)
@@ -56,17 +36,15 @@ class MainWindow(QtWidgets.QWidget):
 
         self.layout.setMenuBar(self.mainMenu)
 
-
-
     def createMenus(self):
 
-        self.actionNewProject = QtWidgets.QAction("New", None)
-        #self.actionNewProject.triggered.connect(self.tree.addNode)
+        self.actionNewWorkspace = QtWidgets.QAction("New Workspace",None)
+        self.actionNewWorkspace.triggered.connect(self.createWorkspace)
 
         self.actionExit = QtWidgets.QAction("Exit", None)
         self.actionExit.triggered.connect(self.close_application)
 
-        self.actionOpen = QtWidgets.QAction("Open", None) # Dodavanje dugmica
+        self.actionOpen = QtWidgets.QAction("Open", None)
         self.actionOpen.triggered.connect(self.file_open)
 
         self.actionHelp = QtWidgets.QAction("Help", None)
@@ -75,18 +53,18 @@ class MainWindow(QtWidgets.QWidget):
         self.actionAbout = QtWidgets.QAction("About", None)
         self.actionAbout.triggered.connect(self.aboutWindow)
 
-
         self.filemenu = self.mainMenu.addMenu("File")
         self.helpmenu = self.mainMenu.addMenu("Help")
 
-
-
-        self.filemenu.addAction(self.actionExit)   # Dodavanje akcija na menubar
+        self.filemenu.addAction(self.actionNewWorkspace)
         self.filemenu.addAction(self.actionOpen)
+        self.filemenu.addAction(self.actionExit)
 
         self.helpmenu.addAction(self.actionHelp)
         self.helpmenu.addAction(self.actionAbout)
 
+    def createWorkspace(self):
+        pass
 
     def close_application(self):
         sys.exit()
@@ -96,14 +74,12 @@ class MainWindow(QtWidgets.QWidget):
         self.textEdit = QtGui.QTextEdit()
         self.setCentralWidget(self.textEdit)
 
-
     def helpWindow(self):
 
         msgBox = QtWidgets.QMessageBox(self)
         msgBox.setWindowTitle(msgBox.tr("Help"))
         msgBox.setText('Cool message')
-        msgBox.show();
-
+        msgBox.show()
 
     def aboutWindow(self):
 
@@ -111,8 +87,6 @@ class MainWindow(QtWidgets.QWidget):
         msgBox.setWindowTitle(msgBox.tr("About"))
         msgBox.setText('Cool message #2')
         msgBox.show();
-
-
 
     def file_open(self): ### FILEOPEN KAO RADI, TREBAJU FUNKCIONALNOSTI
 
@@ -139,44 +113,10 @@ class MainWindow(QtWidgets.QWidget):
             text = file.read()
             self.textEdit.setText(text)
     """
+
     def file_save(self):
         name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
         file = open(name, 'w')
         text = self.textEdit.toPlainText()
         file.write(text)
         file.close()
-
-    def initUI(self):
-            # boldAction =
-            # italicAction =
-            # underlineAction =
-
-        boldLetter = QtWidgets.QAction(QtGui.QIcon("src/media/b.png"), "Bold", self)
-        boldLetter.setShortcut("Ctrl+B")
-        boldLetter.setStatusTip("Podebljava slovo/a")
-            # boldLetter.clicked.connect(boldAction)
-
-        italicLetter = QtWidgets.QAction(QtGui.QIcon("src/media/i.png"), "Italic", self)
-        italicLetter.setShortcut("Ctrl+I")
-        italicLetter.setStatusTip("Kosi slovo/a")
-            # italicLetter.clicked.connect(italicAction)
-
-        underlineLetter = QtWidgets.QAction(QtGui.QIcon("src/media/u.png"), "Underline", self)
-        underlineLetter.setShortcut("Ctrl+U")
-        underlineLetter.setStatusTip("Podvlaci slovo/a")
-            # underlineLetter.clicked.connect(underlineAction)
-
-
-
-
-
-
-
-        #self.toolBar.setGeometry(300, 300, 300, 300)
-
-########################################
-def randomColor():
-    r = lambda: random.randint(0, 255)
-    g = lambda: random.randint(0, 255)
-    b = lambda: random.randint(0, 255)
-    return ('#%02X%02X%02X' % (r(), g(), b()))
