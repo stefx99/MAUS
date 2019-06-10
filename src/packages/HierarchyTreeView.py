@@ -1,5 +1,6 @@
 from PySide2.QtCore import QModelIndex, Qt
 from PySide2.QtWidgets import QTreeView, QMenu, QAction, QWidget, QAbstractItemView, QInputDialog, QMessageBox, QApplication
+from PySide2 import QtWidgets
 import os
 from src.model.Chapter import Chapter
 from src.model.Node import Node
@@ -14,8 +15,8 @@ class HierarchyTreeView(QTreeView):
     def __init__(self):
         """
         Konstruktor
-        
-        Uključuje opciju prikazivanja kontekstnog menija. 
+
+        Uključuje opciju prikazivanja kontekstnog menija.
         """
         super(HierarchyTreeView, self).__init__()
 
@@ -24,13 +25,13 @@ class HierarchyTreeView(QTreeView):
 
     def openMenu(self, position):
         """
-        Metoda povezana na customContextMenuRequested. Kreira kontekstni meni sa akcijama dodavanja, brisanja i promene naziva elemenata. 
+        Metoda povezana na customContextMenuRequested. Kreira kontekstni meni sa akcijama dodavanja, brisanja i promene naziva elemenata.
         Kontekstni meni se prikazuje na poziciji na kojoj se nalazio kursor miša.
-        Args: 
+        Args:
             position(QPoint): pozicija kursora miša
         """
         self.contextMenu = QMenu()
-        newMenu = QMenu("New") 
+        newMenu = QMenu("New")
         self.contextMenu.addMenu(newMenu)
 
         actionNewChapter = QAction("New Chapter",None)
@@ -41,16 +42,21 @@ class HierarchyTreeView(QTreeView):
 
         actionRename = QAction("Rename", None)
         actionRename.triggered.connect(self.showDialog)
-        
+
         actionRemProj = QAction("Delete", None)
         actionRemProj.triggered.connect(self.removeConfirmDialog)
 
         if not self.currentIndex().isValid():
             newMenu.addAction(actionNewChapter)
         else:
-            newMenu.addAction(actionNewProj)
-            self.contextMenu.addAction(actionRename)
-            self.contextMenu.addAction(actionRemProj)
+            if isinstance(self.currentIndex().internalPointer(),Page):
+                self.contextMenu.hideTearOffMenu()
+                self.contextMenu.addAction(actionRename)
+                self.contextMenu.addAction(actionRemProj)
+            else:
+                newMenu.addAction(actionNewProj)
+                self.contextMenu.addAction(actionRename)
+                self.contextMenu.addAction(actionRemProj)
 
         self.contextMenu.exec_(self.viewport().mapToGlobal(position))
 
@@ -64,11 +70,21 @@ class HierarchyTreeView(QTreeView):
 
         text, ok = dialog.getText(self,"New Chapter","Type new chapter name:")
 
-        node = Chapter(text)
-        if not self.currentIndex().isValid():
-            model.insertRow(model.rowCount(self.currentIndex()),node)
+        if ok:
+            if text == "":
+                msgBox = QtWidgets.QMessageBox(self)
+                msgBox.setWindowTitle(msgBox.tr("Error"))
+                msgBox.setText('File must have a name.')
+                msgBox.show();
+                return False
+            else:
+                node = Chapter(text)
+                if not self.currentIndex().isValid():
+                    model.insertRow(model.rowCount(self.currentIndex()), node)
+                else:
+                    model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
         else:
-            model.insertRow(model.rowCount(self.currentIndex()),node,self.currentIndex())
+            return False
 
         self.expand(self.currentIndex())
 
@@ -81,12 +97,21 @@ class HierarchyTreeView(QTreeView):
         dialog.open()
 
         text, ok = dialog.getText(self, "New page", "Type new page name:")
-
-        node = Page(text)
-        if not self.currentIndex().isValid():
-            model.insertRow(model.rowCount(self.currentIndex()), node)
+        if ok:
+            if text == "":
+                msgBox = QtWidgets.QMessageBox(self)
+                msgBox.setWindowTitle(msgBox.tr("Error"))
+                msgBox.setText('Page must have a name.')
+                msgBox.show();
+                return False
+            else:
+                node = Page(text)
+                if not self.currentIndex().isValid():
+                    model.insertRow(model.rowCount(self.currentIndex()), node)
+                else:
+                    model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
         else:
-            model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
+            return False
 
         self.expand(self.currentIndex())
 
@@ -100,12 +125,12 @@ class HierarchyTreeView(QTreeView):
         model = self.model()
 
 
-        model.removeRow(self.currentIndex().internalPointer().getIndex(), self.currentIndex().parent())    
+        model.removeRow(self.currentIndex().internalPointer().getIndex(), self.currentIndex().parent())
 
 
     def mousePressEvent(self, event):
         """
-        Redefinisanje mouse pressed event-a. 
+        Redefinisanje mouse pressed event-a.
         Urađeno jer default-na implementacija rukovanja ovim događajem ne podrazumeva deselekciju elementa stabla prilikom klika na praznu površinu.
         """
         if(self.selectionMode() == QAbstractItemView.SingleSelection):

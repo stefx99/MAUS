@@ -17,6 +17,3 @@ class Chapter(Node):
 
     def change(self):
         self.documentChangedSignal.emit()
-
-    def set_name(self,name):
-        self._name = name
