@@ -50,6 +50,7 @@ class HierarchyTreeView(QTreeView):
             newMenu.addAction(actionNewChapter)
         else:
             if isinstance(self.currentIndex().internalPointer(),Page):
+                newMenu.menuAction().setVisible(False)
                 self.contextMenu.hideTearOffMenu()
                 self.contextMenu.addAction(actionRename)
                 self.contextMenu.addAction(actionRemProj)
