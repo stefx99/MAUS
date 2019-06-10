@@ -113,16 +113,23 @@ class HierarchyTreeView(QTreeView):
                 self.addSlots(node, int(lay[0]), int(lay[1]))
 
                 if not self.currentIndex().isValid():
-                    if False:
+                    try:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
+                    except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
                         msgBox.show();
                         return False
-                    else:
-                        model.insertRow(model.rowCount(self.currentIndex()), node)
                 else:
-                    model.insertRow(self.currentIndex().row(), node, self.currentIndex().parent())
+                    try:
+                        model.insertRow(self.currentIndex().row(), node, self.currentIndex().parent())
+                    except Exception:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
         else:
             return False
 
@@ -151,16 +158,23 @@ class HierarchyTreeView(QTreeView):
                 self.addSlots(node, int(lay[0]), int(lay[1]))
 
                 if not self.currentIndex().isValid():
-                    if False:
+                    try:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
+                    except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
                         msgBox.show();
                         return False
-                    else:
-                        model.insertRow(model.rowCount(self.currentIndex()), node)
                 else:
-                    model.insertRow(self.currentIndex().row()+1, node, self.currentIndex().parent())
+                    try:
+                        model.insertRow(self.currentIndex().row()+1, node, self.currentIndex().parent())
+                    except Exception:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
         else:
             return False
 
@@ -186,16 +200,23 @@ class HierarchyTreeView(QTreeView):
             else:
                 node = Chapter(text)
                 if not self.currentIndex().isValid():
-                    if False:
+                    try:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
+                    except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
                         msgBox.show();
                         return False
-                    else:
-                        model.insertRow(model.rowCount(self.currentIndex()), node)
                 else:
-                    model.insertRow(self.currentIndex().row(), node, self.currentIndex().parent())
+                    try:
+                        model.insertRow(self.currentIndex().row(), node, self.currentIndex().parent())
+                    except Exception:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
         else:
             return False
 
@@ -221,16 +242,23 @@ class HierarchyTreeView(QTreeView):
             else:
                 node = Chapter(text)
                 if not self.currentIndex().isValid():
-                    if False:
+                    try:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
+                    except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
                         msgBox.show();
                         return False
-                    else:
-                        model.insertRow(model.rowCount(self.currentIndex()), node)
                 else:
-                    model.insertRow(self.currentIndex().row()+1, node, self.currentIndex().parent())
+                    try:
+                        model.insertRow(self.currentIndex().row()+1, node, self.currentIndex().parent())
+                    except Exception:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
         else:
             return False
 
@@ -251,21 +279,28 @@ class HierarchyTreeView(QTreeView):
                 msgBox = QtWidgets.QMessageBox(self)
                 msgBox.setWindowTitle(msgBox.tr("Error"))
                 msgBox.setText('File must have a name.')
-                msgBox.show();
+                msgBox.show()
                 return False
             else:
                 node = Chapter(text)
                 if not self.currentIndex().isValid():
-                    if False:
+                    try:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
+                    except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
                         msgBox.show();
                         return False
-                    else:
-                        model.insertRow(model.rowCount(self.currentIndex()), node)
                 else:
-                    model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
+                    try:
+                        model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
+                    except Exception:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
         else:
             return False
 
@@ -293,16 +328,23 @@ class HierarchyTreeView(QTreeView):
                 self.addSlots(node, int(lay[0]), int(lay[1]))
 
                 if not self.currentIndex().isValid():
-                    if False:
+                    try:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
+                    except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
                         msgBox.show();
                         return False
-                    else:
-                        model.insertRow(model.rowCount(self.currentIndex()), node)
                 else:
-                    model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
+                    try:
+                        model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
+                    except Exception:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
         else:
             return False
 

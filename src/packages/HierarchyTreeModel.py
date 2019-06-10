@@ -1,5 +1,6 @@
 from PySide2.QtCore import QAbstractItemModel, QModelIndex, Qt
 from PySide2.QtGui import QIcon
+from PySide2 import QtWidgets
 
 
 
@@ -175,8 +176,15 @@ class HierarchyTreeModel(QAbstractItemModel):
 
             if self.checkName(row.getName(), parentNode):
                 self.removeRow(position, parent)
-
+                raise Exception("Vec postoji")
+                # QtWidgets.QDialog().show()
             return success
+            # # else:
+            #     msgBox = QtWidgets.QMessageBox(self)
+            #     msgBox.setWindowTitle(msgBox.tr("Error"))
+            #     msgBox.setText('Unavailable name.')
+            #     msgBox.show();
+            #     return False
 
         return False
     
