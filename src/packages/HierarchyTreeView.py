@@ -1,18 +1,15 @@
 from PySide2.QtCore import QModelIndex, Qt
 from PySide2.QtWidgets import QTreeView, QMenu, QAction, QWidget, QAbstractItemView, QInputDialog, QMessageBox, QApplication
 import os
+from src.model.Chapter import Chapter
 from src.model.Node import Node
 from src.model.Page import Page
 from src.packages.layoutDialog import layoutDialog
-
-
-
 
 class HierarchyTreeView(QTreeView):
     """
     Grafički prikaz hijerarhijskog stabla uz implementiran kontekstni meni
     """
-
 
     def __init__(self):
         """
@@ -21,12 +18,10 @@ class HierarchyTreeView(QTreeView):
         Uključuje opciju prikazivanja kontekstnog menija. 
         """
         super(HierarchyTreeView, self).__init__()
-        
-        # ukljucuje kontekstni meni
+
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.openMenu)
-        
-    
+
     def openMenu(self, position):
         """
         Metoda povezana na customContextMenuRequested. Kreira kontekstni meni sa akcijama dodavanja, brisanja i promene naziva elemenata. 
@@ -37,30 +32,45 @@ class HierarchyTreeView(QTreeView):
         self.contextMenu = QMenu()
         newMenu = QMenu("New") 
         self.contextMenu.addMenu(newMenu)
-        
+
+        actionNewChapter = QAction("New Chapter",None)
+        actionNewChapter.triggered.connect(self.addChapter)
+
         actionNewProj = QAction("New Page", None)
         actionNewProj.triggered.connect(self.addPage)
 
-        
         actionRename = QAction("Rename", None)
         actionRename.triggered.connect(self.showDialog)
         
         actionRemProj = QAction("Delete", None)
         actionRemProj.triggered.connect(self.removeConfirmDialog)
-        
-        newMenu.addAction(actionNewProj)
-        self.contextMenu.addAction(actionRename)
-        self.contextMenu.addAction(actionRemProj)
-        
-        # prikaz kontekstnog menija
+
+        if not self.currentIndex().isValid():
+            newMenu.addAction(actionNewChapter)
+        else:
+            newMenu.addAction(actionNewProj)
+            self.contextMenu.addAction(actionRename)
+            self.contextMenu.addAction(actionRemProj)
+
         self.contextMenu.exec_(self.viewport().mapToGlobal(position))
-        
 
+    def addChapter(self):
+        model = self.model()
 
-    """
-        Dodavanje novog Pagea-a 
-        
-    """
+        dialog = QInputDialog()
+        dialog.setWindowTitle("New Chapter")
+        dialog.setLabelText("Type new chapter name:")
+        dialog.open()
+
+        text, ok = dialog.getText(self,"New Chapter","Type new chapter name:")
+
+        node = Chapter(text)
+        if not self.currentIndex().isValid():
+            model.insertRow(model.rowCount(self.currentIndex()),node)
+        else:
+            model.insertRow(model.rowCount(self.currentIndex()),node,self.currentIndex())
+
+        self.expand(self.currentIndex())
 
     def addPage(self):
         model = self.model()
@@ -72,34 +82,25 @@ class HierarchyTreeView(QTreeView):
 
         text, ok = dialog.getText(self, "New page", "Type new page name:")
 
-
         node = Page(text)
         if not self.currentIndex().isValid():
             model.insertRow(model.rowCount(self.currentIndex()), node)
-
         else:
-
             model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
-
-        
 
         self.expand(self.currentIndex())
 
 
-
-
-
     def renameNodeDialog(self):
         self.currentIndex()
-    
+
+
     def removeNode(self):
 
         model = self.model()
 
 
         model.removeRow(self.currentIndex().internalPointer().getIndex(), self.currentIndex().parent())    
-        
-
 
 
     def mousePressEvent(self, event):
@@ -112,8 +113,6 @@ class HierarchyTreeView(QTreeView):
             self.setCurrentIndex(QModelIndex())
         super(HierarchyTreeView, self).mousePressEvent(event)
 
-
-
     def showDialog(self):
 
         dialog = QInputDialog()
@@ -122,7 +121,6 @@ class HierarchyTreeView(QTreeView):
         dialog.open()
 
         text ,ok = dialog.getText(self, "Rename node", "Type new package name:")
-
 
         if ok:
             if text == "":
@@ -139,7 +137,6 @@ class HierarchyTreeView(QTreeView):
         msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No )
         msgBox.setDefaultButton(QMessageBox.No)
 
-
         ret = msgBox.exec_()
 
         if ret == QMessageBox.Yes:
@@ -149,8 +146,3 @@ class HierarchyTreeView(QTreeView):
 
         else:
             return  False
-
-
-
-
-
