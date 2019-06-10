@@ -75,64 +75,11 @@ class MainWindow(QtWidgets.QWidget):
         self.actionAbout = QtWidgets.QAction("About", None)
         self.actionAbout.triggered.connect(self.aboutWindow)
 
-        self.actionBold = QtWidgets.QAction("Bold", None)
-        self.actionBold.setShortcut("Ctlr+B")
-        self.actionBold.triggered.connect(self.boldAction)
-        self.actionBold = QtWidgets.QAction(QtGui.QIcon("src/media/b.png"), "Bold", self)
-
-        self.actionItalic = QtWidgets.QAction("Italic", None)
-        self.actionItalic.setShortcut("Ctlr+I")
-        self.actionItalic.triggered.connect(self.italicAction)
-        self.actionItalic = QtWidgets.QAction(QtGui.QIcon("src/media/i.png"), "Italic", self)
-
-        self.actionUnderline = QtWidgets.QAction("Underline", None)
-        self.actionUnderline.setShortcut("Ctlr+I")
-        self.actionUnderline.triggered.connect(self.underlineAction)
-        self.actionUnderline = QtWidgets.QAction(QtGui.QIcon("src/media/u.png"), "Underline", self)
-
-        self.actionFont = QtWidgets.QAction("Font", None)
-        self.actionFont.setShortcut("Ctlr+F")
-        self.actionFont.triggered.connect(self.fontAction)
-        self.actionFont = QtWidgets.QAction(QtGui.QIcon("src/media/f.png"), "Font", self)
-
-        self.actionCopy = QtWidgets.QAction("Copy", None)
-        self.actionCopy.setShortcut("Ctlr+C")
-        self.actionCopy.triggered.connect(self.copyAction)
-        self.actionCopy = QtWidgets.QAction(QtGui.QIcon("src/media/c.png"), "Copy", self)
-
-        self.actionPaste = QtWidgets.QAction("Paste", None)
-        self.actionPaste.setShortcut("Ctlr+V")
-        self.actionPaste.triggered.connect(self.pasteAction)
-        self.actionPaste = QtWidgets.QAction(QtGui.QIcon("src/media/p.png"), "Paste", self)
-
-        self.actionCut = QtWidgets.QAction("Size", None)
-        self.actionCut.setShortcut("Ctlr+X")
-        self.actionCut.triggered.connect(self.cutAction)
-        self.actionCut = QtWidgets.QAction(QtGui.QIcon("src/media/cut.png"), "Cut", self)
-
-        self.actionSize = QtWidgets.QAction("Size", None)
-        ##self.actionSize.setShortcut("") ##Nema shortcut
-        self.actionSize.triggered.connect(self.sizeAction)
-        self.actionSize = QtWidgets.QAction(QtGui.QIcon("src/media/size.png"), "Size", self)
-
-        self.actionColor = QtWidgets.QAction("Color", None)
-        # self.actionColor.setShortcut("")##Nema shortcut
-        self.actionColor.triggered.connect(self.colorAction)
-        self.actionColor = QtWidgets.QAction(QtGui.QIcon("src/media/color.png"), "color", self)
 
         self.filemenu = self.mainMenu.addMenu("File")
-        self.editmenu = self.mainMenu.addMenu("Edit")
         self.helpmenu = self.mainMenu.addMenu("Help")
 
-        self.editmenu.addAction(self.actionBold)
-        self.editmenu.addAction(self.actionItalic)
-        self.editmenu.addAction(self.actionUnderline)
-        self.editmenu.addAction(self.actionFont)
-        self.editmenu.addAction(self.actionCopy)
-        self.editmenu.addAction(self.actionPaste)
-        self.editmenu.addAction(self.actionCut)
-        self.editmenu.addAction(self.actionSize)
-        self.editmenu.addAction(self.actionColor)
+
 
         self.filemenu.addAction(self.actionExit)   # Dodavanje akcija na menubar
         self.filemenu.addAction(self.actionOpen)
@@ -140,32 +87,6 @@ class MainWindow(QtWidgets.QWidget):
         self.helpmenu.addAction(self.actionHelp)
         self.helpmenu.addAction(self.actionAbout)
 
-    def copyAction(self):
-        pass
-
-    def pasteAction(self):
-        pass
-
-    def fontAction(self):
-        pass
-
-    def cutAction(self):
-        pass
-
-    def sizeAction(self):
-        pass
-
-    def colorAction(self):
-        pass
-
-    def boldAction(self):
-        pass
-
-    def italicAction(self):
-        pass
-
-    def underlineAction(self):
-        pass
 
     def close_application(self):
         sys.exit()
