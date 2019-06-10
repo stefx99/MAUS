@@ -58,6 +58,7 @@ class HierarchyTreeView(QTreeView):
                 newMenu.addAction(actionNewProj)
                 self.contextMenu.addAction(actionRename)
                 self.contextMenu.addAction(actionRemProj)
+                
 
         self.contextMenu.exec_(self.viewport().mapToGlobal(position))
 
