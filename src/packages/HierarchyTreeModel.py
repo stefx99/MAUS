@@ -165,8 +165,6 @@ class HierarchyTreeModel(QAbstractItemModel):
             parentNode = self.root
 
 
-
-
         if parentNode.validDepth():
 
             self.beginInsertRows(parent, position, position)

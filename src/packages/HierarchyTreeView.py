@@ -34,6 +34,24 @@ class HierarchyTreeView(QTreeView):
         newMenu = QMenu("New")
         self.contextMenu.addMenu(newMenu)
 
+        insertMenu = QMenu("Insert")
+        self.contextMenu.addMenu(insertMenu)
+
+        actionInsertAboveChapter = QAction("Insert Chapter Above",None)
+        actionInsertAboveChapter.triggered.connect(self.insertChapterAbove)
+
+        actionInsertBellowChapter = QAction("Insert Chapter Bellow",None)
+        actionInsertBellowChapter.triggered.connect(self.insertChapterBellow)
+
+        actionInsertAbovePage = QAction("Insert Page Above",None)
+        actionInsertAbovePage.triggered.connect(self.insertPageAbove)
+
+        actionInsertBellowPage = QAction("Insert Page Bellow",None)
+        actionInsertBellowPage.triggered.connect(self.insertPageBellow)
+
+        actionInsertPage = QAction("Insert Page",None)
+        actionInsertPage.triggered.connect(self.addPage)
+
         actionNewChapter = QAction("New Chapter",None)
         actionNewChapter.triggered.connect(self.addChapter)
 
@@ -48,19 +66,175 @@ class HierarchyTreeView(QTreeView):
 
         if not self.currentIndex().isValid():
             newMenu.addAction(actionNewChapter)
+            insertMenu.menuAction().setVisible(False)
+
         else:
             if isinstance(self.currentIndex().internalPointer(),Page):
                 newMenu.menuAction().setVisible(False)
                 self.contextMenu.hideTearOffMenu()
+                insertMenu.addAction(actionInsertAbovePage)
+                insertMenu.addAction(actionInsertBellowPage)
                 self.contextMenu.addAction(actionRename)
                 self.contextMenu.addAction(actionRemProj)
+            elif isinstance(self.currentIndex().internalPointer(),Slot):
+                insertMenu.menuAction().setVisible(False)
+                newMenu.menuAction().setVisible(False)
+                self.contextMenu.addAction(actionRename)
             else:
                 newMenu.addAction(actionNewProj)
+                insertMenu.addAction(actionInsertAboveChapter)
+                insertMenu.addAction(actionInsertBellowChapter)
                 self.contextMenu.addAction(actionRename)
                 self.contextMenu.addAction(actionRemProj)
 
 
         self.contextMenu.exec_(self.viewport().mapToGlobal(position))
+
+    def insertPageAbove(self):
+        model = self.model()
+
+        text, ok = QInputDialog.getText(self, "New page", "Type new page name:")
+
+        layoutGrid, okk = QInputDialog.getItem(self, "Setting up page layout", "Choose layout",
+                                               ["2x2", "2x3", "2x4", "3x2", "4x2"], 0, False)
+
+        if ok and okk:
+            if text == "":
+                msgBox = QtWidgets.QMessageBox(self)
+                msgBox.setWindowTitle(msgBox.tr("Error"))
+                msgBox.setText('Page must have a name.')
+                msgBox.show();
+                return False
+            else:
+                node = Page(text)
+
+                lay = layoutGrid.split('x')
+
+                self.addSlots(node, int(lay[0]), int(lay[1]))
+
+                if not self.currentIndex().isValid():
+                    if False:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
+                    else:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
+                else:
+                    model.insertRow(self.currentIndex().row(), node, self.currentIndex().parent())
+        else:
+            return False
+
+        self.expand(self.currentIndex())
+
+    def insertPageBellow(self):
+        model = self.model()
+
+        text, ok = QInputDialog.getText(self, "New page", "Type new page name:")
+
+        layoutGrid, okk = QInputDialog.getItem(self, "Setting up page layout", "Choose layout",
+                                               ["2x2", "2x3", "2x4", "3x2", "4x2"], 0, False)
+
+        if ok and okk:
+            if text == "":
+                msgBox = QtWidgets.QMessageBox(self)
+                msgBox.setWindowTitle(msgBox.tr("Error"))
+                msgBox.setText('Page must have a name.')
+                msgBox.show();
+                return False
+            else:
+                node = Page(text)
+
+                lay = layoutGrid.split('x')
+
+                self.addSlots(node, int(lay[0]), int(lay[1]))
+
+                if not self.currentIndex().isValid():
+                    if False:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
+                    else:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
+                else:
+                    model.insertRow(self.currentIndex().row()+1, node, self.currentIndex().parent())
+        else:
+            return False
+
+        self.expand(self.currentIndex())
+
+    def insertChapterAbove(self):
+        model = self.model()
+
+        dialog = QInputDialog()
+        dialog.setWindowTitle("New Chapter")
+        dialog.setLabelText("Type new chapter name:")
+        dialog.open()
+
+        text, ok = dialog.getText(self, "New Chapter", "Type new chapter name:")
+
+        if ok:
+            if text == "":
+                msgBox = QtWidgets.QMessageBox(self)
+                msgBox.setWindowTitle(msgBox.tr("Error"))
+                msgBox.setText('File must have a name.')
+                msgBox.show();
+                return False
+            else:
+                node = Chapter(text)
+                if not self.currentIndex().isValid():
+                    if False:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
+                    else:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
+                else:
+                    model.insertRow(self.currentIndex().row(), node, self.currentIndex().parent())
+        else:
+            return False
+
+        self.expand(self.currentIndex())
+
+    def insertChapterBellow(self):
+        model = self.model()
+
+        dialog = QInputDialog()
+        dialog.setWindowTitle("New Chapter")
+        dialog.setLabelText("Type new chapter name:")
+        dialog.open()
+
+        text, ok = dialog.getText(self, "New Chapter", "Type new chapter name:")
+
+        if ok:
+            if text == "":
+                msgBox = QtWidgets.QMessageBox(self)
+                msgBox.setWindowTitle(msgBox.tr("Error"))
+                msgBox.setText('File must have a name.')
+                msgBox.show();
+                return False
+            else:
+                node = Chapter(text)
+                if not self.currentIndex().isValid():
+                    if False:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
+                    else:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
+                else:
+                    model.insertRow(self.currentIndex().row()+1, node, self.currentIndex().parent())
+        else:
+            return False
+
+        self.expand(self.currentIndex())
 
     def addChapter(self):
         model = self.model()
@@ -100,12 +274,9 @@ class HierarchyTreeView(QTreeView):
     def addPage(self):
         model = self.model()
 
-
-
         text, ok = QInputDialog.getText(self, "New page", "Type new page name:")
 
         layoutGrid, okk = QInputDialog.getItem(self, "Setting up page layout", "Choose layout",["2x2","2x3","2x4","3x2","4x2"], 0, False)
-
 
         if ok and okk:
             if text == "":
@@ -117,12 +288,9 @@ class HierarchyTreeView(QTreeView):
             else:
                 node = Page(text)
 
-
                 lay = layoutGrid.split('x')
 
                 self.addSlots(node, int(lay[0]), int(lay[1]))
-
-
 
                 if not self.currentIndex().isValid():
                     if False:
@@ -140,10 +308,8 @@ class HierarchyTreeView(QTreeView):
 
         self.expand(self.currentIndex())
 
-
     def renameNodeDialog(self):
         self.currentIndex()
-
 
     def removeNode(self):
 
@@ -151,7 +317,6 @@ class HierarchyTreeView(QTreeView):
 
 
         model.removeRow(self.currentIndex().internalPointer().getIndex(), self.currentIndex().parent())
-
 
     def mousePressEvent(self, event):
         """
