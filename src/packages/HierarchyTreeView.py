@@ -104,7 +104,7 @@ class HierarchyTreeView(QTreeView):
 
         text, ok = QInputDialog.getText(self, "New page", "Type new page name:")
 
-        layoutGrid, okk = QInputDialog.getItem(self, "Setting up page layout", "Choose layout",["2x2","2x3", "2x4", "3x2", "4x2"], 0, False)
+        layoutGrid, okk = QInputDialog.getItem(self, "Setting up page layout", "Choose layout",["2x2","2x3","2x4","3x2","4x2"], 0, False)
 
 
         if ok and okk:

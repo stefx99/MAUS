@@ -1,4 +1,5 @@
 from PySide2 import QtWidgets, QtCore, QtGui
+from PySide2.QtWidgets import QMdiArea
 import random
 import sys
 
@@ -35,6 +36,13 @@ class MainWindow(QtWidgets.QWidget):
         self.setWindowTitle(self.tr("MAUS"))
 
         self.layout.setMenuBar(self.mainMenu)
+
+    def setMdiWidget(self,widget):
+        self.mdiWidget = widget
+        self.setCentralWidget(self.mdiWidget)
+
+    def addToMdi(self,widget):
+        self.mdiWidget.addTab(widget,"ime")
 
     def createMenus(self):
 
