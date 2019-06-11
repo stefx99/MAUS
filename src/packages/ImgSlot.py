@@ -1,7 +1,8 @@
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
+from PySide2.QtGui import *
+from PySide2.QtWidgets import *
+from PySide2 import QtCore
+from PySide2.QtCore import Qt
+
 import sys
 import time
 

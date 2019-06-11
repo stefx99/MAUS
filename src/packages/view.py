@@ -28,13 +28,14 @@ class MainWindow(QtWidgets.QWidget):
 
         self.layout = QtWidgets.QHBoxLayout()
         self.layout.addWidget(self.tree)
-        #self.layout.addWidget(self.pageView)
 
         self.mainMenu = QtWidgets.QMenuBar()
 
-        self.preview = bookView()
+        bg = bookView()
+        self.layout.addWidget(bg)
 
-        self.layout.addWidget(self.preview)
+
+        #self.layout.addWidget()
         self.createMenus()
         self.setLayout(self.layout)
         self.setWindowTitle(self.tr("MAUS"))
@@ -51,6 +52,15 @@ class MainWindow(QtWidgets.QWidget):
 
         self.actionNewWorkspace = QtWidgets.QAction("New Workspace",None)
         self.actionNewWorkspace.triggered.connect(self.createWorkspace)
+
+        self.actionSaveBook = QtWidgets.QAction("Save",None)
+        #self.actionSaveBook.triggered.connect(self.save_book)
+
+        self.actionSaveAsBook = QtWidgets.QAction("Save As",None)
+        #self.actionSaveAsBook.triggered.connect(self.save_as_book)
+
+        self.permaDelete = QtWidgets.QAction("Delete Book Permanently",None)
+        #self.permaDelete.triggered.connect(self.perma_delete_book)
 
         self.actionExit = QtWidgets.QAction("Exit", None)
         self.actionExit.triggered.connect(self.close_application)
@@ -69,6 +79,9 @@ class MainWindow(QtWidgets.QWidget):
 
         self.filemenu.addAction(self.actionNewWorkspace)
         self.filemenu.addAction(self.actionOpen)
+        self.filemenu.addAction(self.actionSaveBook)
+        self.filemenu.addAction(self.actionSaveAsBook)
+        self.filemenu.addAction(self.permaDelete)
         self.filemenu.addAction(self.actionExit)
 
         self.helpmenu.addAction(self.actionHelp)

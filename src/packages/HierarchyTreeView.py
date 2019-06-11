@@ -25,6 +25,7 @@ class HierarchyTreeView(QTreeView):
         self.customContextMenuRequested.connect(self.openMenu)
         self.chapterListName = []
 
+
     def openMenu(self, position):
         """
         Metoda povezana na customContextMenuRequested. Kreira kontekstni meni sa akcijama dodavanja, brisanja i promene naziva elemenata.
@@ -76,12 +77,12 @@ class HierarchyTreeView(QTreeView):
                 self.contextMenu.hideTearOffMenu()
                 insertMenu.addAction(actionInsertAbovePage)
                 insertMenu.addAction(actionInsertBellowPage)
-                self.contextMenu.addAction(actionRename)
+                # self.contextMenu.addAction(actionShowDialog)
                 self.contextMenu.addAction(actionRemProj)
             elif isinstance(self.currentIndex().internalPointer(),Slot):
                 insertMenu.menuAction().setVisible(False)
                 newMenu.menuAction().setVisible(False)
-                self.contextMenu.addAction(actionRename)
+                self.contextMenu.addAction(actionShowDialog)
             else:
                 newMenu.addAction(actionNewProj)
                 insertMenu.addAction(actionInsertAboveChapter)
@@ -352,6 +353,7 @@ class HierarchyTreeView(QTreeView):
             return False
 
         self.expand(self.currentIndex())
+
 
     def addPage(self):
         model = self.model()
