@@ -1,6 +1,7 @@
 from PySide2.QtCore import QModelIndex, Qt
 from PySide2.QtWidgets import QTreeView, QMenu, QAction, QWidget, QAbstractItemView, QInputDialog, QMessageBox, QApplication
 from PySide2 import QtWidgets
+from PySide2.QtWidgets import QMdiArea
 import os
 from src.model.Chapter import Chapter
 from src.model.Node import Node
@@ -22,6 +23,7 @@ class HierarchyTreeView(QTreeView):
 
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.openMenu)
+        self.chapterListName = []
 
     def openMenu(self, position):
         """
@@ -52,14 +54,14 @@ class HierarchyTreeView(QTreeView):
         actionInsertPage = QAction("Insert Page",None)
         actionInsertPage.triggered.connect(self.addPage)
 
+        actionShowDialog = QAction("Rename", None)
+        actionShowDialog.triggered.connect(self.showDialog)
+
         actionNewChapter = QAction("New Chapter",None)
         actionNewChapter.triggered.connect(self.addChapter)
 
         actionNewProj = QAction("New Page", None)
         actionNewProj.triggered.connect(self.addPage)
-
-        actionRename = QAction("Rename", None)
-        actionRename.triggered.connect(self.showDialog)
 
         actionRemProj = QAction("Delete", None)
         actionRemProj.triggered.connect(self.removeConfirmDialog)
@@ -84,7 +86,7 @@ class HierarchyTreeView(QTreeView):
                 newMenu.addAction(actionNewProj)
                 insertMenu.addAction(actionInsertAboveChapter)
                 insertMenu.addAction(actionInsertBellowChapter)
-                self.contextMenu.addAction(actionRename)
+                self.contextMenu.addAction(actionShowDialog)
                 self.contextMenu.addAction(actionRemProj)
 
 
@@ -202,6 +204,7 @@ class HierarchyTreeView(QTreeView):
                 if not self.currentIndex().isValid():
                     try:
                         model.insertRow(model.rowCount(self.currentIndex()), node)
+                        self.chapterListName.append(text)
                     except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
@@ -211,6 +214,7 @@ class HierarchyTreeView(QTreeView):
                 else:
                     try:
                         model.insertRow(self.currentIndex().row(), node, self.currentIndex().parent())
+                        self.chapterListName.append(text)
                     except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
@@ -244,6 +248,7 @@ class HierarchyTreeView(QTreeView):
                 if not self.currentIndex().isValid():
                     try:
                         model.insertRow(model.rowCount(self.currentIndex()), node)
+                        self.chapterListName.append(text)
                     except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
@@ -253,6 +258,46 @@ class HierarchyTreeView(QTreeView):
                 else:
                     try:
                         model.insertRow(self.currentIndex().row()+1, node, self.currentIndex().parent())
+                        self.chapterListName.append(text)
+                    except Exception:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show();
+                        return False
+        else:
+            return False
+
+        self.expand(self.currentIndex())
+
+    def renameChapter(self):
+        model = self.model()
+
+        dialog = QInputDialog()
+        dialog.setWindowTitle("New Chapter")
+        dialog.setLabelText("Type new chapter name:")
+        dialog.open()
+
+        text, ok = dialog.getText(self, "New Chapter", "Type new chapter name:")
+
+        if ok:
+            if text == "":
+                msgBox = QtWidgets.QMessageBox(self)
+                msgBox.setWindowTitle(msgBox.tr("Error"))
+                msgBox.setText('File must have a name.')
+                msgBox.show()
+                return False
+            else:
+                if model.checkName(text,self.currentIndex().internalPointer().getParent()):
+                    msgBox = QtWidgets.QMessageBox(self)
+                    msgBox.setWindowTitle(msgBox.tr("Error"))
+                    msgBox.setText('Unavailable name.')
+                    msgBox.show()
+                    return False
+
+                else:
+                    try:
+                        self.currentIndex().internalPointer().setName(text)
                     except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
@@ -286,6 +331,7 @@ class HierarchyTreeView(QTreeView):
                 if not self.currentIndex().isValid():
                     try:
                         model.insertRow(model.rowCount(self.currentIndex()), node)
+                        self.chapterListName.append(text)
                     except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
@@ -295,6 +341,7 @@ class HierarchyTreeView(QTreeView):
                 else:
                     try:
                         model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
+                        self.chapterListName.append(text)
                     except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
@@ -383,8 +430,14 @@ class HierarchyTreeView(QTreeView):
             if text == "":
                 msgBox = QtWidgets.QMessageBox(self)
                 msgBox.setWindowTitle(msgBox.tr("Error"))
-                msgBox.setText('File must have a name.')
-                msgBox.show();
+                msgBox.setText('Invalid name.')
+                msgBox.show()
+                return False
+            elif text in self.chapterListName:
+                msgBox = QtWidgets.QMessageBox(self)
+                msgBox.setWindowTitle(msgBox.tr("Error"))
+                msgBox.setText('Invalid name.')
+                msgBox.show()
                 return False
             else:
                 self.currentIndex().internalPointer().setName(text)
