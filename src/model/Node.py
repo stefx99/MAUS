@@ -163,7 +163,7 @@ class Node(QObject):
         return self.children
 
     def validDepth(self):
-        if self.depth < 2:
+        if self.depth < 3:
             return True
         else:
             return False

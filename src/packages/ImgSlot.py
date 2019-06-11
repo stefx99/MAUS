@@ -5,6 +5,10 @@ from PyQt5.QtCore import Qt
 import sys
 import time
 
+from PySide2.QtWidgets.QComboBox import QComboBox
+from PySide2.QtWidgets.QFontComboBox import QFontComboBox
+from PySide2.QtWidgets.QLabel import QLabel
+
 hideTB = True
 hideFB = True
 hideSB = True
@@ -20,9 +24,7 @@ class Main(QMainWindow):
         self.initUI()
 
     def initUI(self):
-
         ############################################################################################
-
         newAction = QAction(QIcon("src/media/new.png"), "New", self)
         newAction.setShortcut("Ctrl+N")
         newAction.setStatusTip("Create a new document.")

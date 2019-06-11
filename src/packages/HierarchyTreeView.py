@@ -7,7 +7,7 @@ from src.model.Chapter import Chapter
 from src.model.Node import Node
 from src.model.Page import Page
 from src.model.Slot import Slot
-
+from src.model.Book import Book
 class HierarchyTreeView(QTreeView):
     """
     Grafički prikaz hijerarhijskog stabla uz implementiran kontekstni meni
@@ -39,6 +39,9 @@ class HierarchyTreeView(QTreeView):
         insertMenu = QMenu("Insert")
         self.contextMenu.addMenu(insertMenu)
 
+        actionNewBook = QAction("Make new book",None)
+        actionNewBook.triggered.connect(self.addBook)
+
         actionInsertAboveChapter = QAction("Insert Chapter Above",None)
         actionInsertAboveChapter.triggered.connect(self.insertChapterAbove)
 
@@ -67,28 +70,36 @@ class HierarchyTreeView(QTreeView):
         actionRemProj.triggered.connect(self.removeConfirmDialog)
 
         if not self.currentIndex().isValid():
-            newMenu.addAction(actionNewChapter)
+            newMenu.addAction(actionNewBook)
             insertMenu.menuAction().setVisible(False)
 
         else:
-            if isinstance(self.currentIndex().internalPointer(),Page):
-                newMenu.menuAction().setVisible(False)
-                self.contextMenu.hideTearOffMenu()
-                insertMenu.addAction(actionInsertAbovePage)
-                insertMenu.addAction(actionInsertBellowPage)
-                self.contextMenu.addAction(actionRename)
-                self.contextMenu.addAction(actionRemProj)
-            elif isinstance(self.currentIndex().internalPointer(),Slot):
+            if isinstance(self.currentIndex().internalPointer(), Book):
                 insertMenu.menuAction().setVisible(False)
-                newMenu.menuAction().setVisible(False)
-                self.contextMenu.addAction(actionRename)
-            else:
+                newMenu.addAction(actionNewChapter)
+                self.contextMenu.addAction(actionShowDialog)
+                self.contextMenu.addAction(actionRemProj)
+
+
+            elif isinstance(self.currentIndex().internalPointer(), Chapter):
                 newMenu.addAction(actionNewProj)
                 insertMenu.addAction(actionInsertAboveChapter)
                 insertMenu.addAction(actionInsertBellowChapter)
                 self.contextMenu.addAction(actionShowDialog)
                 self.contextMenu.addAction(actionRemProj)
 
+            elif isinstance(self.currentIndex().internalPointer(),Page):
+                newMenu.menuAction().setVisible(False)
+                self.contextMenu.hideTearOffMenu()
+                insertMenu.addAction(actionInsertAbovePage)
+                insertMenu.addAction(actionInsertBellowPage)
+                self.contextMenu.addAction(actionShowDialog)
+                self.contextMenu.addAction(actionRemProj)
+
+            else:
+                insertMenu.menuAction().setVisible(False)
+                newMenu.menuAction().setVisible(False)
+                self.contextMenu.addAction(actionShowDialog)
 
         self.contextMenu.exec_(self.viewport().mapToGlobal(position))
 
@@ -253,7 +264,7 @@ class HierarchyTreeView(QTreeView):
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
-                        msgBox.show();
+                        msgBox.show()
                         return False
                 else:
                     try:
@@ -263,7 +274,7 @@ class HierarchyTreeView(QTreeView):
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
-                        msgBox.show();
+                        msgBox.show()
                         return False
         else:
             return False
@@ -302,7 +313,7 @@ class HierarchyTreeView(QTreeView):
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
-                        msgBox.show();
+                        msgBox.show()
                         return False
         else:
             return False
@@ -326,6 +337,7 @@ class HierarchyTreeView(QTreeView):
                 msgBox.setText('File must have a name.')
                 msgBox.show()
                 return False
+
             else:
                 node = Chapter(text)
                 if not self.currentIndex().isValid():
@@ -336,7 +348,7 @@ class HierarchyTreeView(QTreeView):
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
-                        msgBox.show();
+                        msgBox.show()
                         return False
                 else:
                     try:
@@ -346,7 +358,50 @@ class HierarchyTreeView(QTreeView):
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
-                        msgBox.show();
+                        msgBox.show()
+                        return False
+        else:
+            return False
+
+        self.expand(self.currentIndex())
+
+    def addBook(self):
+        model = self.model()
+
+        dialog = QInputDialog()
+        dialog.setWindowTitle("New Book")
+        dialog.setLabelText("Type new book name:")
+        dialog.open()
+
+        text, ok = dialog.getText(self, "New Book", "Type new book name:")
+
+        if ok:
+            if text == "":
+                msgBox = QtWidgets.QMessageBox(self)
+                msgBox.setWindowTitle(msgBox.tr("Error"))
+                msgBox.setText('File must have a name.')
+                msgBox.show()
+                return False
+
+            else:
+                node = Book(text)
+                if not self.currentIndex().isValid():
+                    try:
+                        model.insertRow(model.rowCount(self.currentIndex()), node)
+                    except Exception:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show()
+                        return False
+                else:
+                    try:
+                        model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
+                    except Exception:
+                        msgBox = QtWidgets.QMessageBox(self)
+                        msgBox.setWindowTitle(msgBox.tr("Error"))
+                        msgBox.setText('Unavailable name.')
+                        msgBox.show()
                         return False
         else:
             return False
@@ -365,7 +420,7 @@ class HierarchyTreeView(QTreeView):
                 msgBox = QtWidgets.QMessageBox(self)
                 msgBox.setWindowTitle(msgBox.tr("Error"))
                 msgBox.setText('Page must have a name.')
-                msgBox.show();
+                msgBox.show()
                 return False
             else:
                 node = Page(text)
@@ -381,7 +436,7 @@ class HierarchyTreeView(QTreeView):
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
-                        msgBox.show();
+                        msgBox.show()
                         return False
                 else:
                     try:
@@ -390,7 +445,7 @@ class HierarchyTreeView(QTreeView):
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
                         msgBox.setText('Unavailable name.')
-                        msgBox.show();
+                        msgBox.show()
                         return False
         else:
             return False
