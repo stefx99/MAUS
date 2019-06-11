@@ -387,7 +387,16 @@ class HierarchyTreeView(QTreeView):
                 msgBox.show();
                 return False
             else:
-                self.currentIndex().internalPointer().setName(text)
+                model = self.model()
+                if model.checkName(text,self.currentIndex().internalPointer().getParent()):
+                    msgBox = QtWidgets.QMessageBox(self)
+                    msgBox.setWindowTitle(msgBox.tr("Error"))
+                    msgBox.setText('Unavailable name.')
+                    msgBox.show()
+                    #NE RADI
+                else:
+                    self.currentIndex().internalPointer().setName(text)
+
         else:
             return False
 
