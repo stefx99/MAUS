@@ -5,12 +5,15 @@ from PySide2.QtGui import QIcon
 class Page(Node):
 
     documentChangedSignal = Signal()
+    childInsertedSignal = Signal()
+    childRemovedSignal = Signal()
+    nameChangedSignal = Signal()
 
     def __init__(self, name):
         super(Page, self).__init__(name)
         self.layout = None
         self._name = None
-        self.elements = {}
+
 
     def getIcon(self):
         return QIcon('src/media/page.png')
@@ -18,5 +21,3 @@ class Page(Node):
     def change(self):
         self.documentChangedSignal.emit()
 
-    # def set_name(self,name):
-    #     self._name = name
