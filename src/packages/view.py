@@ -57,6 +57,9 @@ class MainWindow(QtWidgets.QWidget):
         self.actionNewWorkspace = QtWidgets.QAction("New Workspace",None)
         self.actionNewWorkspace.triggered.connect(self.createWorkspace)
 
+        self.actionCancelWorkspace = QtWidgets.QAction("Cancel Workspace",None)
+        self.actionCancelWorkspace.triggered.connect(self.cancelWorkspace)
+
         self.actionSaveBook = QtWidgets.QAction("Save",None)
         self.actionSaveBook.triggered.connect(self.save_book)
 
@@ -82,6 +85,7 @@ class MainWindow(QtWidgets.QWidget):
         self.helpmenu = self.mainMenu.addMenu("Help")
 
         self.filemenu.addAction(self.actionNewWorkspace)
+        self.filemenu.addAction(self.cancelWorkspace)
         self.filemenu.addAction(self.actionOpen)
         self.filemenu.addAction(self.actionSaveBook)
         self.filemenu.addAction(self.actionSaveAsBook)
@@ -90,6 +94,11 @@ class MainWindow(QtWidgets.QWidget):
 
         self.helpmenu.addAction(self.actionHelp)
         self.helpmenu.addAction(self.actionAbout)
+
+    def cancelWorkspace(self):
+        file = open("workspace.txt", "w")
+        file.write("NoPath|False")
+        file.close()
 
     def createWorkspace(self):
         subwindow = QtWidgets.QMdiSubWindow()

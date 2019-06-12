@@ -1,1 +1,1 @@
-False;Path
+C:/Users/Uros/Desktop/MAUS/src/model/__pycache__|True
