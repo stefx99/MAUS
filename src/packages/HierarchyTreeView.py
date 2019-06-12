@@ -37,10 +37,13 @@ class HierarchyTreeView(QTreeView):
         newMenu = QMenu("New")
         self.contextMenu.addMenu(newMenu)
 
+        deleteMenu = QMenu("Delete Book")
+        self.contextMenu.addMenu(deleteMenu)
+
         insertMenu = QMenu("Insert")
         self.contextMenu.addMenu(insertMenu)
 
-        actionNewBook = QAction("Make new book",None)
+        actionNewBook = QAction("Create a Book",None)
         actionNewBook.triggered.connect(self.addBook)
 
         actionInsertAboveChapter = QAction("Insert Chapter Above",None)
@@ -67,21 +70,28 @@ class HierarchyTreeView(QTreeView):
         actionNewProj = QAction("New Page", None)
         actionNewProj.triggered.connect(self.addPage)
 
-        actionRemProj = QAction("Delete", None)
-        actionRemProj.triggered.connect(self.removeConfirmDialog)
+        actionRemProj = QAction("Permanent Delete", None)
+        actionRemProj.triggered.connect(self.permaDelete)
+
+        actionHideBook = QAction("Hide from TreeView",None)
+        actionHideBook.triggered.connect(self.removeConfirmDialog)
 
         if not self.currentIndex().isValid():
             newMenu.addAction(actionNewBook)
             insertMenu.menuAction().setVisible(False)
+            deleteMenu.menuAction().setVisible(False)
 
         else:
             if isinstance(self.currentIndex().internalPointer(), Book):
                 insertMenu.menuAction().setVisible(False)
+                deleteMenu.addAction(actionHideBook)
+                deleteMenu.addAction(actionRemProj)
                 newMenu.addAction(actionNewChapter)
                 self.contextMenu.addAction(actionShowDialog)
                 self.contextMenu.addAction(actionRemProj)
 
             elif isinstance(self.currentIndex().internalPointer(), Chapter):
+                deleteMenu.menuAction().setVisible(False)
                 newMenu.addAction(actionNewProj)
                 insertMenu.addAction(actionInsertAboveChapter)
                 insertMenu.addAction(actionInsertBellowChapter)
@@ -90,6 +100,7 @@ class HierarchyTreeView(QTreeView):
 
             elif isinstance(self.currentIndex().internalPointer(),Page):
                 newMenu.menuAction().setVisible(False)
+                deleteMenu.menuAction().setVisible(False)
                 self.contextMenu.hideTearOffMenu()
                 insertMenu.addAction(actionInsertAbovePage)
                 insertMenu.addAction(actionInsertBellowPage)
@@ -98,10 +109,28 @@ class HierarchyTreeView(QTreeView):
 
             else:
                 insertMenu.menuAction().setVisible(False)
+                deleteMenu.menuAction().setVisible(False)
                 newMenu.menuAction().setVisible(False)
                 self.contextMenu.addAction(actionShowDialog)
 
         self.contextMenu.exec_(self.viewport().mapToGlobal(position))
+
+    def permaDelete(self):
+        msgBox = QMessageBox()
+        msgBox.setText("The package will be deleted from directory.")
+        msgBox.setInformativeText("Do you want to permanently delete it?")
+        msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        msgBox.setDefaultButton(QMessageBox.No)
+
+        ret = msgBox.exec_()
+
+        if ret == QMessageBox.Yes:
+            print("oce")
+            # os.remove() #arg je PATH, koji je ustvari 2 deo teksta u workspace.txt
+        elif ret == QMessageBox.No:
+            return False
+        else:
+            return False
 
     def insertPageAbove(self):
         model = self.model()
@@ -459,7 +488,6 @@ class HierarchyTreeView(QTreeView):
     def removeNode(self):
 
         model = self.model()
-
 
         model.removeRow(self.currentIndex().internalPointer().getIndex(), self.currentIndex().parent())
 
