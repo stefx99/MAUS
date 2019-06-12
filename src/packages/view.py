@@ -1,14 +1,18 @@
+from PyQt5.QtWidgets import QFileDialog, QApplication
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtWidgets import QMdiArea
 import random
 import sys
 import textwrap
+
+from src.model import Book
 from src.model.Node import Node
 from src.packages.HierarchyTreeModel import HierarchyTreeModel
 from src.packages.HierarchyTreeView import HierarchyTreeView
 from src.packages.TextEdit import Window
 from src.packages.PreviewPage import PreviewPage
 from src.packages.bookView import bookView
+from src.packages.OpenSave import Save, Open
 
 
 class MainWindow(QtWidgets.QWidget):
@@ -54,7 +58,7 @@ class MainWindow(QtWidgets.QWidget):
         self.actionNewWorkspace.triggered.connect(self.createWorkspace)
 
         self.actionSaveBook = QtWidgets.QAction("Save",None)
-        #self.actionSaveBook.triggered.connect(self.save_book)
+        self.actionSaveBook.triggered.connect(self.save_book)
 
         self.actionSaveAsBook = QtWidgets.QAction("Save As",None)
         #self.actionSaveAsBook.triggered.connect(self.save_as_book)
@@ -98,6 +102,10 @@ class MainWindow(QtWidgets.QWidget):
 
         self.textEdit = QtGui.QTextEdit()
         self.setCentralWidget(self.textEdit)
+
+    def save_book(self):
+        self.save = Save()
+        self.save.execute()
 
     def helpWindow(self):
 
@@ -170,18 +178,21 @@ class MainWindow(QtWidgets.QWidget):
 
     def file_open(self): ### FILEOPEN KAO RADI, TREBAJU FUNKCIONALNOSTI
 
-        fileOpen = QtWidgets.QFileDialog()
+        self.open = Open()
+        self.open.execute()
 
-        fileOpen.setFileMode(QtWidgets.QFileDialog.ExistingFiles)
-
-        if fileOpen.exec_():
-            inFiles = fileOpen.selectedFiles()
-        else:
-            inFiles = []
-
-        fileOpen.setParent(None)
-
-        return inFiles
+        # fileOpen = QtWidgets.QFileDialog()
+        #
+        # fileOpen.setFileMode(QtWidgets.QFileDialog.ExistingFiles)
+        #
+        # if fileOpen.exec_():
+        #     inFiles = fileOpen.selectedFiles()
+        # else:
+        #     inFiles = []
+        #
+        # fileOpen.setParent(None)
+        #
+        # return inFiles
 
     """
         name = QtGui.QFileOpenEvent.openFile(self, 'Open File')
@@ -193,10 +204,3 @@ class MainWindow(QtWidgets.QWidget):
             text = file.read()
             self.textEdit.setText(text)
     """
-
-    def file_save(self):
-        name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
-        file = open(name, 'w')
-        text = self.textEdit.toPlainText()
-        file.write(text)
-        file.close()
