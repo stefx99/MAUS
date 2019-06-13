@@ -8,6 +8,8 @@ from src.model.Node import Node
 from src.model.Page import Page
 from src.model.Slot import Slot
 from src.model.Book import Book
+from src.packages.ImgSlot import Main as M
+from src.packages.ImgEditor import Window as W
 class HierarchyTreeView(QTreeView):
     """
     Grafički prikaz hijerarhijskog stabla uz implementiran kontekstni meni
@@ -43,6 +45,9 @@ class HierarchyTreeView(QTreeView):
         insertMenu = QMenu("Insert")
         self.contextMenu.addMenu(insertMenu)
 
+        editMenu = QMenu("Edit")
+        self.contextMenu.addMenu(editMenu)
+
         actionNewBook = QAction("Create a Book",None)
         actionNewBook.triggered.connect(self.addBook)
 
@@ -76,14 +81,22 @@ class HierarchyTreeView(QTreeView):
         actionHideBook = QAction("Hide from TreeView",None)
         actionHideBook.triggered.connect(self.removeConfirmDialog)
 
+        actionAddTextEdit = QAction("Open text editor",None)
+        actionAddTextEdit.triggered.connect(self.addEditor)
+
+        actionAddImgEdit = QAction("Open image editor", None)
+        actionAddImgEdit.triggered.connect(self.addImgEditor)
+
         if not self.currentIndex().isValid():
             newMenu.addAction(actionNewBook)
             insertMenu.menuAction().setVisible(False)
             deleteMenu.menuAction().setVisible(False)
+            editMenu.menuAction().setVisible(False)
 
         else:
             if isinstance(self.currentIndex().internalPointer(), Book):
                 insertMenu.menuAction().setVisible(False)
+                editMenu.menuAction().setVisible(False)
                 deleteMenu.addAction(actionHideBook)
                 deleteMenu.addAction(actionRemProj)
                 newMenu.addAction(actionNewChapter)
@@ -92,6 +105,7 @@ class HierarchyTreeView(QTreeView):
 
             elif isinstance(self.currentIndex().internalPointer(), Chapter):
                 deleteMenu.menuAction().setVisible(False)
+                editMenu.menuAction().setVisible(False)
                 newMenu.addAction(actionNewProj)
                 insertMenu.addAction(actionInsertAboveChapter)
                 insertMenu.addAction(actionInsertBellowChapter)
@@ -101,6 +115,7 @@ class HierarchyTreeView(QTreeView):
             elif isinstance(self.currentIndex().internalPointer(),Page):
                 newMenu.menuAction().setVisible(False)
                 deleteMenu.menuAction().setVisible(False)
+                editMenu.menuAction().setVisible(False)
                 self.contextMenu.hideTearOffMenu()
                 insertMenu.addAction(actionInsertAbovePage)
                 insertMenu.addAction(actionInsertBellowPage)
@@ -109,11 +124,20 @@ class HierarchyTreeView(QTreeView):
 
             else:
                 insertMenu.menuAction().setVisible(False)
+                editMenu.addAction(actionAddTextEdit)
+                editMenu.addAction(actionAddImgEdit)
                 deleteMenu.menuAction().setVisible(False)
                 newMenu.menuAction().setVisible(False)
                 self.contextMenu.addAction(actionShowDialog)
 
         self.contextMenu.exec_(self.viewport().mapToGlobal(position))
+
+    def addEditor(self):
+        self.edit = M()
+
+    def addImgEditor(self):
+        self.imgedit = W()
+
 
     def permaDelete(self):
         msgBox = QMessageBox()
@@ -123,10 +147,8 @@ class HierarchyTreeView(QTreeView):
         msgBox.setDefaultButton(QMessageBox.No)
 
         ret = msgBox.exec_()
-
         if ret == QMessageBox.Yes:
-            print("oce")
-            # os.remove() #arg je PATH, koji je ustvari 2 deo teksta u workspace.txt
+            pass
         elif ret == QMessageBox.No:
             return False
         else:
@@ -414,9 +436,17 @@ class HierarchyTreeView(QTreeView):
 
             else:
                 node = Book(text)
+                node.setName(text)
                 if not self.currentIndex().isValid():
                     try:
                         model.insertRow(model.rowCount(self.currentIndex()), node)
+                        file = open("src/model/workspace.txt", "r")
+                        line = file.readline()
+                        delimiter = line.split("|")
+                        print("a")
+                        os.mkdir(delimiter[0] + "/" + node.getName() + ".maus")
+                        file.close()
+
                     except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))
@@ -426,6 +456,13 @@ class HierarchyTreeView(QTreeView):
                 else:
                     try:
                         model.insertRow(model.rowCount(self.currentIndex()), node, self.currentIndex())
+                        file = open("src/model/workspace.txt","r")
+                        line = file.readline()
+                        delimiter = line.split("|")
+                        print("a")
+                        os.mkdir(delimiter[0]+"/"+node.getName()+".maus")
+                        file.close()
+
                     except Exception:
                         msgBox = QtWidgets.QMessageBox(self)
                         msgBox.setWindowTitle(msgBox.tr("Error"))

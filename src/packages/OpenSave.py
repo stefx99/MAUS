@@ -20,13 +20,16 @@ class Save(QAction):
     def __init__(self):
 
         super(Save, self).__init__("Save")
-        #self.setIcon(QIcon("../../res/icons/save.png"))
         self.triggered.connect(self.execute)
 
 
     def execute(self):
+        file = open("src/model/workspace.txt","r")
+        line = file.readline()
+        delimiter = line.split("|")
         model = QApplication.instance()
-        a =name, filter = QFileDialog.getSaveFileName(None, 'Save graphic file', '.', '*.maus', '', QFileDialog.DontUseNativeDialog)
+        global name
+        a =name, filter = QFileDialog.getSaveFileName(None, 'Save graphic file',delimiter[0], '*.maus', '', QFileDialog.DontUseNativeDialog)
 
         if not name:
             pass

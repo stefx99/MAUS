@@ -20,11 +20,11 @@ class Open(QAction):
 
     def setWorkspace(self):
         global name
-        file = open("workspace.txt","r")
+        file = open("src/model/workspace.txt","r")
         global delimiter0
         line = file.readline()
         delimiter0 = line.split("|")
         file.close()
-        file = open("workspace.txt","w")
+        file = open("src/model/workspace.txt","w")
         file.write(name+"|"+delimiter0[1])
         file.close()

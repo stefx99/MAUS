@@ -1,6 +1,7 @@
 from PySide2.QtCore import Signal
 from src.model.Node import Node
 from PySide2.QtGui import QIcon
+import sys,os
 
 class Book(Node):
     documentChangedSignal = Signal()

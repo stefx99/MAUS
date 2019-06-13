@@ -1,8 +1,9 @@
-from PyQt5.QtWidgets import QFileDialog, QApplication
+from PyQt5.QtWidgets import QFileDialog, QApplication,QDialog
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtWidgets import QMdiArea
 import random
 import sys
+import os
 import textwrap
 
 from src.model import Book
@@ -11,8 +12,20 @@ from src.packages.HierarchyTreeModel import HierarchyTreeModel
 from src.packages.HierarchyTreeView import HierarchyTreeView
 from src.packages.TextEdit import Window
 from src.packages.PreviewPage import PreviewPage
+from src.model.WorkspaceGUI import WorkspaceGUI
 from src.packages.bookView import bookView
 from src.packages.OpenSave import Save, Open
+
+
+def proveraWorkspace():
+    file = open("src/model/workspace.txt","r")
+    line = file.readline()
+    delimiter = line.split("|")
+    if delimiter[1] == "False":
+        dialog = WorkspaceGUI()
+        dialog.exec_()
+    else:
+        print("s")
 
 
 class MainWindow(QtWidgets.QWidget):
@@ -21,10 +34,6 @@ class MainWindow(QtWidgets.QWidget):
 
         self.rootNode = Node('ROOT')
         self.treeModel = HierarchyTreeModel(self.rootNode)
-
-        # self.mdi = QMdiArea()
-        # self.setMdiWidget(self.mdi)
-
 
         self.tree = HierarchyTreeView()
         self.tree.setModel(self.treeModel)
@@ -46,12 +55,6 @@ class MainWindow(QtWidgets.QWidget):
 
         self.layout.setMenuBar(self.mainMenu)
 
-    # def setMdiWidget(self,widget):
-    #     print("")
-    #     self.show()
-    # def addToMdi(self,widget):
-    #     self.mdiWidget.addTab(widget,"ime")
-
     def createMenus(self):
 
         self.actionNewWorkspace = QtWidgets.QAction("New Workspace",None)
@@ -61,13 +64,13 @@ class MainWindow(QtWidgets.QWidget):
         self.actionCancelWorkspace.triggered.connect(self.cancelWorkspace)
 
         self.actionSaveBook = QtWidgets.QAction("Save",None)
-        self.actionSaveBook.triggered.connect(self.save_book)
+        #self.actionSaveBook.triggered.connect(self.save_book)
 
         self.actionSaveAsBook = QtWidgets.QAction("Save As",None)
-        #self.actionSaveAsBook.triggered.connect(self.save_as_book)
+        self.actionSaveAsBook.triggered.connect(self.save_book)
 
         self.permaDelete = QtWidgets.QAction("Delete Book Permanently",None)
-        #self.permaDelete.triggered.connect(self.perma_delete_book)
+        self.permaDelete.triggered.connect(self.perma_delete_book)
 
         self.actionExit = QtWidgets.QAction("Exit", None)
         self.actionExit.triggered.connect(self.close_application)
@@ -85,7 +88,7 @@ class MainWindow(QtWidgets.QWidget):
         self.helpmenu = self.mainMenu.addMenu("Help")
 
         self.filemenu.addAction(self.actionNewWorkspace)
-        self.filemenu.addAction(self.cancelWorkspace)
+        self.filemenu.addAction(self.actionCancelWorkspace)
         self.filemenu.addAction(self.actionOpen)
         self.filemenu.addAction(self.actionSaveBook)
         self.filemenu.addAction(self.actionSaveAsBook)
@@ -95,8 +98,16 @@ class MainWindow(QtWidgets.QWidget):
         self.helpmenu.addAction(self.actionHelp)
         self.helpmenu.addAction(self.actionAbout)
 
+    def perma_delete_book(self):
+        file = open("src/model/workspace/txt","r")
+        line = file.readline()
+        delimiter = line.split("|")
+        os.remove(delimiter[0]+"/a.maus")
+        file.close()
+
+
     def cancelWorkspace(self):
-        file = open("workspace.txt", "w")
+        file = open("src/model/workspace.txt", "w")
         file.write("NoPath|False")
         file.close()
 

@@ -1,10 +1,6 @@
 from PyQt5.QtWidgets import QApplication,QLabel,QDialog,QCheckBox,QTextEdit,QPushButton,QFileDialog,QAction
 import sys
-from PyQt5 import QtWidgets,QtCore
-from src.packages.view import MainWindow
 from src.model.OpenFileWspace import Open
-import pickle
-
 class WorkspaceGUI(QDialog):
     def __init__(self):
         super().__init__()
@@ -42,38 +38,47 @@ class WorkspaceGUI(QDialog):
 
         checkBox = QCheckBox(self)
         checkBox.move(140,130)
-
         self.show()
 
     def openDialog(self):
         self.open = Open()
         self.open.execute()
-        file = open("workspace.txt", "r")
+        file = open("src/model/workspace.txt", "r")
         line = file.readline()
         dmtr = line.split("|")
+        print(dmtr[0])
         pathText.append(dmtr[0])
         file.close()
 
     def buttonClicked(self):
-        global pathText
+        global flag
         global checkBox
         if checkBox.isChecked():
             self.setWorkspace()
-        self.hide()
+            self.setVisible(False)
+        else:
+            self.setWorkspaceFalse()
+            self.setVisible(False)
+        self.parent().show()
 
-
-    def setWorkspace(self):
-        file = open("workspace.txt","r")
+    def setWorkspaceFalse(self):
+        file = open("src/model/workspace.txt", "r")
         global delimiter
         line = file.readline()
         delimiter = line.split("|")
         file.close()
-        file = open("workspace.txt","w")
+        file = open("src/model/workspace.txt", "w")
+        delimiter[1] = "False"
+        file.write(delimiter[0] + "|" + delimiter[1])
+        file.close()
+
+    def setWorkspace(self):
+        file = open("src/model/workspace.txt","r")
+        global delimiter
+        line = file.readline()
+        delimiter = line.split("|")
+        file.close()
+        file = open("src/model/workspace.txt","w")
         delimiter[1] = "True"
         file.write(delimiter[0]+"|"+delimiter[1])
         file.close()
-
-if __name__ == "__main__":
-    App = QApplication(sys.argv)
-    window = WorkspaceGUI()
-    sys.exit(App.exec_())

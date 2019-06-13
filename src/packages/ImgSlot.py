@@ -6,9 +6,9 @@ from PySide2.QtCore import Qt
 import sys
 import time
 
-from PySide2.QtWidgets.QComboBox import QComboBox
-from PySide2.QtWidgets.QFontComboBox import QFontComboBox
-from PySide2.QtWidgets.QLabel import QLabel
+from PySide2.QtWidgets import *
+# from PySide2.QtWidgets.QFontComboBox import QFontComboBox
+# from PySide2.QtWidgets.QLabel import QLabel
 
 hideTB = True
 hideFB = True
@@ -22,6 +22,7 @@ class Main(QMainWindow):
         self.bottom = 200
         self.width = 700
         self.height = 700
+
         self.initUI()
 
     def initUI(self):
